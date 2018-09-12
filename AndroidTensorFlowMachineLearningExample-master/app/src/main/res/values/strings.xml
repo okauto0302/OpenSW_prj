@@ -1,0 +1,22 @@
+<!--
+  ~    Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">인공지능 키프리스 특허검색</string>
+    <string name="detect_object">[1] AI 사물 인식</string>
+    <string name="translation_text">[2] AI 기계 번역</string>
+    <string name="toggle_camera">카메라(On/Off)</string>
+</resources>
