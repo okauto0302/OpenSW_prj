@@ -16,7 +16,7 @@
 
 <resources>
     <string name="app_name">인공지능 특허검색</string>
-    <string name="detect_object">[1] AI 사물 인식</string>
-    <string name="translation_text">[2] AI 기계 번역</string>
+    <string name="detect_object">[영어] AI 이미지 인식</string>
+    <string name="translation_text">[한국어] AI 기계 번역</string>
     <string name="toggle_camera">카메라(On/Off)</string>
 </resources>
