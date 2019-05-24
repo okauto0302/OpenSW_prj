@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private static final float IMAGE_STD = 1;
     private static final String INPUT_NAME = "input";
     private static final String OUTPUT_NAME = "output";
-
     private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
@@ -92,81 +91,90 @@ public class MainActivity extends AppCompatActivity {
     private String result;
 
 
-    class BackgroundTask extends AsyncTask<Integer, Integer, Integer>{
-        protected void onPreExcute(){
+    class BackgroundTask extends AsyncTask<Integer, Integer, Integer> {
+        protected void onPreExcute() {
         }
 
         @Override
-        protected Integer doInBackground(Integer... arg0){
+        protected Integer doInBackground(Integer... arg0) {
 
             StringBuilder output = new StringBuilder();
 
-            String clientId =  "_qEab38IKQivHfGEUJHU";
+            String clientId = "_qEab38IKQivHfGEUJHU";
             String clientSecret = "eMF_ooo4hi";
             try {
-
                 /*
                         구글 이미지 검색 결과
                  */
-                String rs1 = imgResult.split("\\[")[1];
-                String rs2 = rs1.split("\\]")[1];
-                String rs = rs2.split("\\(")[0];
-                translationText = rs.trim();
+                if("" != imgResult){
+                    String rs1 = imgResult.split("\\[")[1];
+                    String rs2 = rs1.split("\\]")[1];
+                    String rs = rs2.split("\\(")[0];
+                    translationText = rs.trim();
 
-                String text = URLEncoder.encode(translationText, "UTF-8");
-                String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
+                    String text = URLEncoder.encode(translationText, "UTF-8");
+                    String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
 
-                // 파파고 API와 연결을 수행
-                URL url = new URL(apiURL);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("X-Naver-Client-Id", clientId);
-                con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+                    // 파파고 API와 연결을 수행
+                    URL url = new URL(apiURL);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("X-Naver-Client-Id", clientId);
+                    con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
 
-                // 번역할 문장을 파라미터로 넘김
-                String postParams = "source=en&target=ko&text=" + text;
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                    // 번역할 문장을 파라미터로 넘김
+                    String postParams = "source=en&target=ko&text=" + text;
+                    con.setDoOutput(true);
+                    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
-                wr.writeBytes(postParams);
-                wr.flush();
-                wr.close();
+                    wr.writeBytes(postParams);
+                    wr.flush();
+                    wr.close();
 
-                // 번역 결과 받아오기
-                int responseCode = con.getResponseCode();
-                BufferedReader br;
-                if (responseCode == 200) {
-                    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                } else {
-                    br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    // 번역 결과 받아오기
+                    int responseCode = con.getResponseCode();
+                    BufferedReader br;
+                    if (responseCode == 200) {
+                        br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    } else {
+                        br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    }
+
+                    String inputLine;
+                    while ((inputLine = br.readLine()) != null) {
+                        output.append(inputLine);
+                    }
+                    br.close();
                 }
 
-                String inputLine;
-                while ((inputLine = br.readLine()) != null) {
-                    output.append(inputLine);
-                }
-                br.close();
-            }catch (Exception ex){
+
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
+
             result = output.toString();
+
             return null;
         }
 
-        protected void onPostExecute(Integer a){
+        protected void onPostExecute(Integer a) {
             JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-            if(element.getAsJsonObject().get("errorMessage") != null){
 
-            }else if(element.getAsJsonObject().get("message") != null){
-                // 번역 결과 출력 + ' ' + 번역 전 영문
-                resultText.setText(element.getAsJsonObject().get("message").getAsJsonObject().get("result").getAsJsonObject().get("translatedText").getAsString());
+            // 이미지 인식이 실패할 경우가 생기므로
+            if ("" != result) {
+                JsonElement element = parser.parse(result);
+                if (element.getAsJsonObject().get("errorMessage") != null) {
+
+                } else if (element.getAsJsonObject().get("message") != null) {
+                    // 번역 결과 출력 + ' ' + 번역 전 영문
+                    resultText.setText(element.getAsJsonObject().get("message").getAsJsonObject().get("result").getAsJsonObject().get("translatedText").getAsString());
+                }
+
             }
 
         }
-
-
     }
+
 
 
 
